@@ -3320,3 +3320,12 @@ body {
     align-items: center;
     padding-top: 70px;
 }
+
+.submit-box {
+    background-color: rgb(39, 39, 39);
+    color: white;
+    padding: 20px 20px 20px 20px;
+    display: inline-block;
+    margin: 20px 0px 20px 0px;
+    width: 300px;
+}

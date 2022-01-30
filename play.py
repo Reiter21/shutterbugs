@@ -1,4 +1,5 @@
 from datetime import datetime
+from email.mime import image
 import pytz
 from flask import redirect, session, flash
 from pymongo import MongoClient
@@ -16,6 +17,7 @@ questions = db['questions']
 answer_log = db['answer-entry-log']
 dq_collection = db['dq-participants']
 checking_collection = db['checker']
+image_collection = db['image-entry']
 
 
 def login_check(check):
@@ -46,6 +48,18 @@ def get_level_content():
             end = "True"
             return end
 
+def get_specific_level_content(level):
+    if level == '-':
+        return None
+    else:
+        try:
+            question_doc = questions.find_one({'_id': int(level)})
+            question = question_doc['question']
+            return f"{question}"
+        except:
+            end = "True"
+            return end
+
 
 def get_level_image():
     user = leaderboard.find_one({'_id': session['user']})
@@ -56,6 +70,19 @@ def get_level_image():
     else:
         try:
             question_doc = questions.find_one({'_id': level})
+            image = question_doc['image']
+            return image
+        except:
+            end = "True"
+            return end
+
+def get_specific_level_image(level):
+    session['level'] = level
+    if level == '-':
+        return None
+    else:
+        try:
+            question_doc = questions.find_one({'_id': int(level)})
             image = question_doc['image']
             return image
         except:
@@ -113,8 +140,19 @@ def validate_answer(response, ip):
                 'responses': {}
             }}}
         answer_log.update_one(search_query, update_query)
+
+        update_query = {
+            '$set': {
+                f'level{current_level}': {
+                    'number': 0,
+                    'responses': []
+                }
+            }
+        }
+        image_collection.update_one(search_query, update_query)
+
         flash("Correct answer!", 'correct-ans')
-        return redirect('/submit_click')
+        return redirect(f'/submit_click{current_level}')
 
     else:
         user_log = answer_log.find_one({'_id': session['user']})
@@ -142,8 +180,8 @@ def checkifrunning():
     return status
 
 def checkifanswered(user_id):
-    user = user_collection.find_one({'_id': user_id})
-
+    user_check = user_collection.find_one({'_id': user_id})
+    
 
 def get_source_hint():
     user = leaderboard.find_one({'_id': session['user']})

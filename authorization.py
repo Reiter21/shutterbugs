@@ -14,6 +14,7 @@ db = client.mindcraft
 user_collection = db['users']
 leaderboard = db['leaderboard']
 answer_log = db['answer-entry-log']
+image_collection = db['image-entry']
 
 
 def authorize(token):
@@ -55,6 +56,16 @@ def authorize(token):
             'responses': {}
         }
 
+        image_entry = user_data.copy()
+        del image_entry['mfa_enabled']
+        del image_entry['avatar']
+        del image_entry['verified']
+        image_entry['level0'] = {
+            'number': 0,
+            'responses': {}
+        }
+
+
         user_data['time'] = time
         user_data['name'] = '-'
         user_data['organization'] = '-'
@@ -73,6 +84,7 @@ def authorize(token):
             answer_log.insert_one(log_entry)
             leaderboard.insert_one(leaderboard_entry)
             user_collection.insert_one(user_data)
+            image_collection.insert_one(image_entry)
             session['login'] = True
             session['user'] = user_id
             flash("Registration Successful", 'correct-ans')

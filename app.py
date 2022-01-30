@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
+from flask_pymongo import PyMongo
 from authorization import authorize
-from config import oauth_url
+from config import oauth_url, DATABASE_URL
 from leaderboard import leaderboard_sort
 from play import *
 from token_exchange import get_token
@@ -8,13 +9,16 @@ from userform_upload import user_data_upload
 from user import *
 from questions import *
 from play import checkifrunning
+from click_upload import accept_click, getImages
 from hunt import pausehunt, runhunt, endhunt
 from sidequests import *
-import cryptocode
 import logging
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ok'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['MONGO_URI'] = DATABASE_URL
+mongo = PyMongo(app)
 log = logging.getLogger('werkzeug')
 log.disabled = True
 SESSION_COOKIE_SECURE = True
@@ -133,14 +137,82 @@ def validate_ans():
     response = request.form['response']
     return validate_answer(response, ip)
 
-@app.route('/submit_click', methods=['GET', 'POST'])
-def submit_click():
-    question = get_level_content()
-    flash(question, 'level-content')
-    flash(get_level(), 'level-num')
-    flash(get_level_image(), 'level-image')
-    login = session['login']
-    return render_template('submit_click.html', login=login, url=oauth_url, user_answer="heck")
+@app.route('/submit_click<level>/accept', methods=['GET', 'POST'])
+def acc_click(level):
+    response = request.files['click_image']
+    return accept_click(response, level)
+
+@app.route('/submit_click<level>', methods=['GET', 'POST'])
+def submit_click(level):
+    if checkifrunning() == 'paused':
+        flash('The platform is under maintenance, try again later', 'incorrect-ans')
+        return redirect('/')
+
+    elif checkifrunning() == 'ended':
+        flash('the hunt has ended', 'correct-ans')
+        return redirect('/')
+
+    elif checkifrunning() == 'running':
+        try:
+            check = session['login']
+            #check2 = session['user']
+        except:
+            return redirect('/auth')
+        login_check(check)
+        if dq_check(session['user']):
+            flash('you have been disqualified smh', 'incorrect-ans')
+            return redirect('/')
+        else:
+            if session['question_display']:
+                question = get_specific_level_content(level)
+                if question == "True" or int(level) >= int(get_level()[6:]):
+                    return redirect('/submit_clicks')
+                else:
+                    if str(get_level()[-1]) == '-':
+                        return render_template('userform.html')
+                    else:
+                        flash(question, 'level-content')
+                        flash(get_specific_level_image(level), 'level-image')
+                        return render_template('submit_click.html', login=check, url=oauth_url, user_answer="heck", level=level)
+        return redirect('/auth')
+
+@app.route('/submit_clicks')
+def submit_clicks():
+    if checkifrunning() == 'paused':
+        flash('The platform is under maintenance, try again later', 'incorrect-ans')
+        return redirect('/')
+
+    elif checkifrunning() == 'ended':
+        flash('the hunt has ended', 'correct-ans')
+        return redirect('/')
+
+    elif checkifrunning() == 'running':
+        try:
+            check = session['login']
+            check2 = session['user']
+        except:
+            return redirect('/auth')
+        login_check(check)
+        if dq_check(session['user']):
+            flash('you have been disqualified smh', 'incorrect-ans')
+            return redirect('/')
+        else:
+            if session['question_display']:
+                level = get_level()
+                if str(level[-1]) == '-':
+                    return render_template('userform.html')
+                elif str(level)[-1] == '0':
+                    flash('Clicks can be uploaded after solving at least 1 level', 'incorrect-ans')
+                    return redirect('/play')
+                else:
+                    level_int = int(level[6:])
+                    image_list = getImages(check2, level_int)
+                    return render_template('submit_clicks.html', login=check, url=oauth_url, levels=list(range(level_int)), image_list=image_list)
+        return redirect('/auth')
+
+@app.route('/file/<filename>')
+def file(filename):
+    return mongo.send_file(filename)
 
 @app.route('/leaderboard')
 def leaderboard():

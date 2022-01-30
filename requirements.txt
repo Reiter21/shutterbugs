@@ -7,6 +7,7 @@ cryptocode==0.1
 cryptography==3.4.7
 dnspython==2.1.0
 Flask
+flask_pymongo
 gunicorn==20.1.0
 idna==3.2
 importlib-metadata
