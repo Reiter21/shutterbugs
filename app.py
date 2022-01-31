@@ -402,8 +402,11 @@ def view_clicks():
 
 @app.route('/admin/clicks/<user_id>')
 def view_user_clicks(user_id):
-    images = getAllImages(user_id, leaderboard.find_one({'_id': user_id})['level'])
-    return render_template('user_click.html', images=images)
+    try:
+        images = getAllImages(user_id, leaderboard.find_one({'_id': user_id})['level'])
+        return render_template('user_click.html', images=images)
+    except Exception as exception:
+        return f"{exception}"
 
 
 
