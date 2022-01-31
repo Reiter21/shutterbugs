@@ -2,14 +2,14 @@ from flask import Flask, render_template, request
 from flask_pymongo import PyMongo
 from authorization import authorize
 from config import oauth_url, DATABASE_URL
-from leaderboard import leaderboard_sort
+from leaderboard import leaderboard_sort, leaderboard
 from play import *
 from token_exchange import get_token
 from userform_upload import user_data_upload
 from user import *
 from questions import *
 from play import checkifrunning
-from click_upload import accept_click, getImages
+from click_upload import accept_click, getAllImages, getImages
 from hunt import pausehunt, runhunt, endhunt
 from sidequests import *
 import logging
@@ -395,6 +395,17 @@ def modify_question(question_id):
     flash(edit_question(int(question_id), question_data['content'], question_data['image'], question_data['source_hint'], question_data['answer'],
                         int(question_data['points']), int(question_data['next_level'])))
     return redirect('/admin/questions')
+
+@app.route('/admin/clicks')
+def view_clicks():
+    return render_template('users_clicks.html', user_list=leaderboard_sort())
+
+@app.route('/admin/clicks/<user_id>')
+def view_user_clicks(user_id):
+    images = getAllImages(user_id, leaderboard.find_one('_id': user_id)['level'])
+    return render_template('user_click.html', images=images)
+
+
 
 
 if __name__ == "__main__":

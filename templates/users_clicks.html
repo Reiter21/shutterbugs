@@ -1,0 +1,8 @@
+{% for user in user_list %}
+<tr>
+    <th>{{ loop.index }}</th>
+    <th><a href="/admin/clicks/{{ user['_id'] }}">{{ user['username'] }}</a></th>
+    <th>{{ user['level'] }}</th>
+    <th>{{ user['points'] }}</th>
+</tr>
+{% endfor %}

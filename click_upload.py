@@ -84,3 +84,13 @@ def getImages(user_id, levels):
         else:
             ret.append('none')
     return ret
+
+def getAllImages(user_id, levels):
+    tmp = image_collection.find_one({'_id': user_id})
+    ret = []
+    for i in range(levels):
+        if tmp[f'level{i}']['number'] > 0:
+            ret.append(tmp[f'level{i}']['responses'])
+        else:
+            ret.append('none')
+    return ret
