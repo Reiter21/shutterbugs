@@ -399,15 +399,20 @@ def modify_question(question_id):
 
 @app.route('/admin/clicks')
 def view_clicks():
-    return render_template('users_clicks.html', user_list=leaderboard_sort())
+    if admin_check(session['user']):
+        return render_template('users_clicks.html', user_list=leaderboard_sort())
+    else:
+        flash('you are not an admin 🙄', 'incorrect-ans')
+        return redirect('/')
 
 @app.route('/admin/clicks/<user_id>')
 def view_user_clicks(user_id):
-    try:
+    if admin_check(session['user']):
         images = getAllImages(user_id, leaderboard_db.find_one({'_id': user_id})['level'])
         return render_template('user_click.html', images=images)
-    except Exception as exception:
-        return f"{exception}"
+    else:
+        flash('you are not an admin 🙄', 'incorrect-ans')
+        return redirect('/')
 
 
 
