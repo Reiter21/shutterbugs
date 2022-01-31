@@ -3216,7 +3216,7 @@ body {
 }
 
 .alert-correct-ans {
-    padding: 20px;
+    padding: 25px 0px;
     background-color: #04AA6D;
     color: white;
     position: absolute;
@@ -3229,11 +3229,11 @@ body {
 
 .alert-message {
     text-align: center;
-    padding-top: 70px;
+    padding-top: 14px;
 }
 
 .alert-incorrect-ans {
-    padding: 25px;
+    padding: 25px 0px;
     background-color: #ea384c;
     color: white;
     position: absolute;

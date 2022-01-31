@@ -3292,11 +3292,11 @@ body {
 
 .alert-message {
     text-align: center;
-    padding-top: 140px;
+    padding-top: 20px;
 }
 
 .alert-incorrect-ans {
-    padding: 20px;
+    padding: 25px 0px;
     background-color: #ea384c;
     color: white;
     position: absolute;
@@ -3309,7 +3309,7 @@ body {
 }
 
 .alert-correct-ans {
-    padding: 20px;
+    padding: 25px 0px;
     background-color: #04AA6D;
     color: white;
     position: absolute;
