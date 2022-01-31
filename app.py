@@ -2,7 +2,8 @@ from flask import Flask, render_template, request
 from flask_pymongo import PyMongo
 from authorization import authorize
 from config import oauth_url, DATABASE_URL
-from leaderboard import leaderboard_sort, leaderboard
+from leaderboard import leaderboard_sort
+from leaderboard import leaderboard as leaderboard_db
 from play import *
 from token_exchange import get_token
 from userform_upload import user_data_upload
@@ -403,7 +404,7 @@ def view_clicks():
 @app.route('/admin/clicks/<user_id>')
 def view_user_clicks(user_id):
     try:
-        images = getAllImages(user_id, leaderboard.find_one({'_id': user_id})['level'])
+        images = getAllImages(user_id, leaderboard_db.find_one({'_id': user_id})['level'])
         return render_template('user_click.html', images=images)
     except Exception as exception:
         return f"{exception}"
