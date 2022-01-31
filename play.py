@@ -199,3 +199,7 @@ def get_source_hint():
         except:
             end = "True"
             return end
+
+def get_level_answer(level):
+    tmp = questions.find_one({'_id': int(level)})
+    return tmp['answer']

@@ -173,7 +173,8 @@ def submit_click(level):
                     else:
                         flash(question, 'level-content')
                         flash(get_specific_level_image(level), 'level-image')
-                        return render_template('submit_click.html', login=check, url=oauth_url, user_answer="heck", level=level)
+                        user_answer = get_level_answer(level)
+                        return render_template('submit_click.html', login=check, url=oauth_url, user_answer=user_answer, level=level)
         return redirect('/auth')
 
 @app.route('/submit_clicks')
