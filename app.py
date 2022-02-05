@@ -76,7 +76,12 @@ def form():
     data = request.form
     name = data['name']
     organization = data['organization']
-    return user_data_upload(name, organization)
+    p1 = data['participant1']
+    p2 = data['participant2']
+    c1 = data['class1']
+    c2 = data['class2']
+    phone = data['phone']
+    return user_data_upload(name, organization, p1, p2, c1, c2, phone)
 
 
 @app.route('/u/edit', methods=['POST', 'GET'])
@@ -239,14 +244,14 @@ def user(user_id):
     try:
         login = session['login']
         data = user_page(user_id)
-        details = f"""<u>Name</u><br>{data['name']}<br><u>Level</u><br>{data['level']}<br><u>Organisation</u><br>{data['organization']}<br><u>Registration Time</u><br>{data['time']}<br><u>Last Solved</u><br>{data['last_solved']}<br>"""
+        details = f"""<u>Team Name</u><br>{data['name']}<br><u>Level</u><br>{data['level']}<br><u>School Name</u><br>{data['organization']}<br><u>Participant 1</u><br>{data['participant1']}<br><u>Participant 2</u><br>{data['participant2']}<br><u>Registration Time</u><br>{data['time']}<br><u>Last Solved</u><br>{data['last_solved']}<br>"""
         return render_template('user.html', login=login, url=oauth_url, user=user_id, data=data, details=details,
                                admin=admin_check(session['user']), dq_check=dq_check(user_id))
     except KeyError:
         session['login'] = False
         session['user'] = None
         data = user_page(user_id)
-        details = f"""<u>Name</u><br>{data['name']}<br><u>Level</u><br>{data['level']}<br><u>Organisation</u><br>{data['organization']}<br><u>Registration Time</u><br>{data['time']}<br><u>Last Solved</u><br>{data['last_solved']}<br>"""
+        details = f"""<u>Team Name</u><br>{data['name']}<br><u>Level</u><br>{data['level']}<br><u>School Name</u><br>{data['organization']}<br><u>Participant 1</u><br>{data['participant1']}<br><u>Participant 2</u><br>{data['participant2']}<br><u>Registration Time</u><br>{data['time']}<br><u>Last Solved</u><br>{data['last_solved']}<br>"""
         return render_template('user.html', login=session['login'], url=oauth_url, user=user_id, data=data,
                                details=details, admin=admin_check(session['user']), dq_check=dq_check(user_id))
 

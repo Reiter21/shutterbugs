@@ -81,7 +81,7 @@
             {% for user in leaderboard %}
             <tr class="cell">
                 <th>{{ loop.index }}</th>
-                <th><a href="/u/{{ user['_id'] }}" class="usernames">{{ user['username'] }}</a></th>
+                <th><a href="/u/{{ user['_id'] }}" class="usernames">{{ user['name'] }}</a></th>
                 <th>{{ user['level'] }}</th>
                 <th>{{ user['points'] }}</th>
             </tr>

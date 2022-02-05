@@ -64,10 +64,20 @@
     <div class="page-hero-section wf-section">
         <div class="form-block w-form">
             <form action="/userform" method="POST" id="email-form" name="email-form" data-name="Email Form" class="form-2">
-                <label for="name">Name</label>
+                <label for="name">Team Name</label>
                 <input type="text" class="w-input" maxlength="256" name="name" data-name="Name" placeholder="" id="name" required/>
-                <label for="email">Organisation</label>
+                <label for="participant1">Participant 1</label>
+                <input type="text" class="w-input" maxlength="256" name="participant1" data-name="participant1" placeholder="" id="participant1" required="" />
+                <label for="participant2">Participant 2 (write NA if solo)</label>
+                <input type="text" class="w-input" maxlength="256" name="participant2" data-name="participant2" placeholder="" id="participant2" />
+                <label for="email">Full School Name</label>
                 <input type="text" class="w-input" maxlength="256" name="organization" data-name="organization" placeholder="" id="organization" required="" />
+                <label for="class1">Class (participant 1)</label>
+                <input type="text" class="w-input" maxlength="5" name="class1" data-name="class1" placeholder="" id="class1" required="" />
+                <label for="class1">Class (participant 2)</label>
+                <input type="text" class="w-input" maxlength="5" name="class2" data-name="class2" placeholder="" id="class2" required="" />
+                <label for="phone">Phone number</label>
+                <input type="text" class="w-input" maxlength="14" name="phone" data-name="phone" placeholder="" id="phone" required="" />
                 <input type="submit" value="Submit" data-wait="Submitting your data" class="w-button" />
             </form>
         </div>
